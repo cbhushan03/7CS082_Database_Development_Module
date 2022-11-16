@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>Add Flight</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+	integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+	crossorigin="anonymous">
+<!-- <link rel="stylesheet" href="../css/shards.min.css"> -->
+
+<link
+	href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"
+	rel="stylesheet">
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+</head>
+
+<body>
+	<div class="container my-5">
+		<h3>Add Flight</h3>
+		<div class="card">
+			<div class="card-body">
+				<div class="col-md-10">
+					<form id="addFlight" action="#" th:action="@{/flights/add}"
+						th:object="${flight}" method="post"  >
+						<div class="row">
+							<div class="form-group col-md-8">
+								<label for="name" class="col-form-label">Arrival Airport</label> <input
+									type="text" th:field="*{arrivalAirport}" class="form-control"
+									id="arrivalAirport" name="arrivalAirport" placeholder="Arrival Airport"> <span
+									th:if="${#fields.hasErrors('arrivalAirport')}"
+									th:errors="*{arrivalAirport}" class="text-danger"></span>
+							</div>
+
+							<div class="form-group col-md-8">
+								<label for="name" class="col-form-label">Departure Airport</label> <input
+									type="text" th:field="*{departureAirport}" class="form-control"
+									id="departureAirport" name="departureAirport" placeholder="Departure Airport"> <span
+									th:if="${#fields.hasErrors('departureAirport')}"
+									th:errors="*{departureAirport}" class="text-danger"></span>
+							</div>
+
+							<div class="form-group col-md-8">
+								<label for="name" class="col-form-label">Arrival Time</label> <input
+									type="text" th:field="*{arrivalTime}" class="form-control"
+									id="arrivalTime" name="arrivalTime" placeholder="Arrival Time"> <span
+									th:if="${#fields.hasErrors('arrivalTime')}"
+									th:errors="*{arrivalTime}" class="text-danger"></span>
+							</div>
+
+							<div class="form-group col-md-8">
+								<label for="name" class="col-form-label">Departure Time</label> <input
+									type="text" th:field="*{DepartureTime}" name="departureTime" class="form-control" id="Departure Time"
+									placeholder="Departure Time"> <span
+									th:if="${#fields.hasErrors('departureTime')}" th:errors="*{departureTime}"
+									class="text-danger"></span>
+							</div>
+
+							<div class="form-group col-md-8">
+								<label for="name" class="col-form-label">Pilot</label> 
+								<select th:field="*{pilot}">
+								  <option th:each="student : ${allPilots}" 
+								          th:value="${student.empid}" 
+								          th:text="${student.firstname} +', '+ ${student.lastname}"></option>
+								</select>
+							</div>
+
+						<div class="form-group col-md-8">
+								<label for="name" class="col-form-label">Pilot</label> 
+								<select th:field="*{plane}">
+								  <option th:each="std : ${allAirLine}" 
+								          th:value="${std.numsrl}" 
+								          th:text="${std.airlineName} "></option>
+								</select>
+							</div>
+
+
+							<div class="col-md-6">
+								<input id="submit" type="submit" class="btn btn-primary"
+									value="Add Flight">
+							</div>
+
+							<div class="form-group col-md-8"></div>
+
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
