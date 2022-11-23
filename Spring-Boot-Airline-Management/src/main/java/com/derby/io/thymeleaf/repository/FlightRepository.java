@@ -54,8 +54,8 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
 	
 	@Transactional
 	@Modifying
-	@Query(value = "update employee set status='D' where Employee_ID=:id  ",nativeQuery =true)
-	void removeEmployee(@Param(value = "id") long id);
+	@Query(value = "update flight set status='D' where Flight_number=:id  ",nativeQuery =true)
+	void removeFlight(@Param(value = "id") long id);
 
 
 }

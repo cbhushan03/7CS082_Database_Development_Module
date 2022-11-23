@@ -101,12 +101,13 @@ public class FlightController {
 	}
 	 
 
-	/*
-	 * @GetMapping("delete/{departmentId}") public String
-	 * deleteStudent(@PathVariable("departmentId") long id, Model model) {
-	 * Department department = repository.findById(id) .orElseThrow(() -> new
-	 * IllegalArgumentException("Invalid department Id:" + id));
-	 * repository.delete(department); model.addAttribute("departments",
-	 * repository.findAll()); return "index"; }
-	 */
+	
+	  @GetMapping("delete/{flightNumber}") 
+	  public String deleteStudent(@PathVariable("flightNumber") long id, Model model) {
+	  repository.removeFlight(id); 
+	  model.addAttribute("flights", repository.getActiveFlights());
+      return "indexFlight";
+      
+	  }
+	 
 }

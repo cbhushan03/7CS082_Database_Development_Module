@@ -30,6 +30,8 @@ public class Airline {
 	@Column(name="Rating")
 	private String rating;
 	
+	
+	
 	@Column(name="Creation_Date")
 	private Timestamp creationDate;
 	

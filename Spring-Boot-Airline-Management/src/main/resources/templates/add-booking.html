@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>Add Booking</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+	integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+	crossorigin="anonymous">
+<!-- <link rel="stylesheet" href="../css/shards.min.css"> -->
+
+<link
+	href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"
+	rel="stylesheet">
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script>
+$(function() {
+	 var $dp1 = $("#flightDate"); 
+     $dp1.datepicker({
+       changeYear: true,
+       changeMonth: true,
+       minDate:0,
+       dateFormat: "yy-m-dd",
+       yearRange: "-100:+20",
+     });     
+    
+ });
+</script>
+</head>
+
+<body>
+	<div class="container my-2">
+		<div class="card">
+			<div class="card-body">
+				<div th:switch="${allFlight}" class="container my-5">
+					
+					<div class="col-md-10">
+						<h2 th:case="null">No Flight data available yet!</h2>
+						<div th:case="*">
+							<p class="h6"> Available Route</p>
+							<table class="table table-striped table-responsive-md">
+								<thead>
+									<tr>
+										<th>Flight ID</th>
+										<th>Arrival<BR/> Name</th>
+										<th>Departure</th>
+										<th>Arrival Time<BR/>Date</th>
+										<th>Departure Time</th>
+										<th>Plane</th>
+										
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="flg : ${allFlight}">
+									<td th:text="${flg.flightNumber}"></td>
+										<td th:text="${flg.arrivalAirport}"></td>
+										<td th:text="${flg.departureAirport}"></td>
+										<td th:text="${flg.arrivalTime}"></td>
+										<td th:text="${flg.departureTime}"></td>
+										<td th:text="${flg.planeName}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<div class="container my-5">
+		<h3>Add Booking</h3>
+		<div class="card">
+			<div class="card-body">
+				<div class="col-md-10">
+					<form id="addFlight" action="#" th:action="@{/booking/add}"
+						th:object="${booking}" method="post"  >
+						<div class="row">
+							
+						 
+							
+							
+							<div class="form-group col-md-10">
+								
+							
+								<table class="table">
+									<thead>
+										<tr>
+										<th><label for="name" class="col-form-label">List Passengers </label> </th>
+										<th><button type="submit" name="addRow" id="addRow" value="Add Passenger">Add New Passenger</button>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="psg,iStat : *{passengers}">
+										 <td th:text="${iStat.count}">1</td>
+										 <td>
+										 	<select th:field="*{passengers[__${iStat.index}__].passengerId}">
+								 					<option th:each="var : ${allPassenger}" 
+								 					
+								 					th:value="${var.passengerId}"  th:text="${var.firstname} +', '+ ${var.lastname}"></option>
+                      						</select>
+										 </td>
+										 <td>
+                    						<button type="submit" name="removeRow" id="removeRow" th:value="${iStat.index}" >Remove Passenger</button>
+                 						 </td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							
+
+						
+						 <div class="form-group col-md-10">
+								<label for="name" class="col-form-label">Select Flight</label> 
+								<select th:field="*{flightId}">
+								  <option th:each="flt : ${allFlight}" 
+								          th:value="${flt.flightNumber}" 
+								          th:text="'Departure: '+ ${flt.departureAirport} +', Arrival: '+ ${flt.arrivalAirport}"></option>
+								</select>
+							</div>
+							
+							<div class="form-group col-md-10">
+							<label for="name" class="col-form-label">Journey Date</label> <input
+									type="text" th:field="*{flightDate}" class="form-control" name="flightDate"
+									id="flightDate" placeholder="yyyy-mm-dd"> <span
+									th:if="${#fields.hasErrors('flightDate')}"
+									th:errors="*{flightDate}" class="text-danger"></span>
+							</div>
+							
+
+							<div class="col-md-6">
+								<input id="submit" type="submit" class="btn btn-primary"
+									value="Add Flight">
+							</div>
+
+							<div class="form-group col-md-8"></div>
+
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
