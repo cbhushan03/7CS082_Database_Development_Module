@@ -39,8 +39,9 @@ $(function() {
      $dp1.datepicker({
        changeYear: true,
        changeMonth: true,
-       minDate:0,
-       dateFormat: "dd-mm-yy",
+       maxDate: '11m',
+       minDate: '-11m',
+       dateFormat: "yy-mm-dd",
        yearRange: "-100:+20",
      });     
     

@@ -9,8 +9,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.derby.io.thymeleaf.model.Employee;
+
 import com.derby.io.thymeleaf.model.Flight;
+
+import com.derby.io.thymeleaf.model.PilotSchedule;
 
 public interface FlightRepository extends JpaRepository<Flight, Long> {
 	
@@ -21,14 +23,15 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
 		
 	@Transactional
 	@Modifying
-	@Query(value = "INSERT INTO flight (Arrival_Airport, Departure_Airport, Arrival_Time, Departure_Time, Pilot_ID, Plane_ID) VALUES\r\n" + 
-			"(:arrivalAir, :departAir, :aTime, :dTime, :pilot, :plane) ",nativeQuery =true)
+	@Query(value = "INSERT INTO flight (Arrival_Airport, Departure_Airport, Arrival_Time, Departure_Time, Pilot_ID, Plane_ID,hours) VALUES\r\n" + 
+			"(:arrivalAir, :departAir, :aTime, :dTime, :pilot, :plane, :hours) ",nativeQuery =true)
 	void saveFlight(@Param(value = "arrivalAir") String arrivalAir,
 			@Param(value = "departAir") String departAir,
 			@Param(value = "aTime") String aTime,
 			@Param(value = "dTime") String dTime,
 			@Param(value = "pilot") long pilot,
-			@Param(value = "plane") long plane
+			@Param(value = "plane") long plane,
+			@Param(value = "hours") int hours
 			);
 	
 	@Query(value = "select f.*,concat(e.First_Name,', ',e.Last_Name) as pilot_Name , a.Airline_Name as plane_Name from flight f inner join employee e on f.Pilot_ID = e.Employee_ID inner join airline a "
@@ -38,7 +41,7 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
 	
 	@Transactional
 	@Modifying
-	@Query(value = "UPDATE flight SET Arrival_Airport=:arrivalAir, Departure_Airport=:departAir, Arrival_Time=:aTime, Departure_Time=:dTime, Pilot_ID=:pilot, Plane_ID=:plane "
+	@Query(value = "UPDATE flight SET Arrival_Airport=:arrivalAir, Departure_Airport=:departAir, Arrival_Time=:aTime, Departure_Time=:dTime, Pilot_ID=:pilot, Plane_ID=:plane, hours=:hours "
 			+ " WHERE Flight_number=:fNum" ,nativeQuery =true)
 	void updateFlight(@Param(value = "arrivalAir") String arrivalAir,
 			@Param(value = "departAir") String departAir,
@@ -46,6 +49,7 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
 			@Param(value = "dTime") String dTime,
 			@Param(value = "pilot") long pilot,
 			@Param(value = "plane") long plane,
+			@Param(value = "hours") int hours,
 			@Param(value = "fNum") long fNum
 			);
 	
@@ -56,6 +60,12 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
 	@Modifying
 	@Query(value = "update flight set status='D' where Flight_number=:id  ",nativeQuery =true)
 	void removeFlight(@Param(value = "id") long id);
+	
+	@Query(value="select p.* from pilotschedule p",nativeQuery=true)
+	List<PilotSchedule> getPilotScheduleList();
+	
+	@Query(value="select p.* from pilotschedule p order by p.totalhours desc",nativeQuery=true)
+	List<PilotSchedule> getPilotScheduleListDesc();
 
 
 }

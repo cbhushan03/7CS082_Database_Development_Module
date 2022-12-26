@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
-<title>Booking</title>
+<title>Pilot Schedule</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
@@ -50,52 +50,42 @@
 	<div class="container my-2">
 		<div class="card">
 			<div class="card-body">
-				<div th:switch="${booking}" class="container my-5">
-					<p class="my-5">
-						<a href="/booking/signup" class="btn btn-primary"><i
-							class="fas fa-user-plus ml-2"> Add Booking</i></a>
+				<div th:switch="${pilotSchedule}" class="container my-5">
+					<p  class="my-5">
+					
+						<a th:if="${order} == 'DESC'" href="/flights/browsePilotScheduleDesc" class="btn btn-primary"><i
+							class="fas fa-user-plus ml-2">In Descending Order</i></a>
+							
+						<a th:if="${order} == 'ASC'" href="/flights/browsePilotSchedule" class="btn btn-primary"><i
+							class="fas fa-user-plus ml-2">In Ascending Order</i></a>
 					</p>
 					<div class="col-md-10">
-						<h2 th:case="null">No Booking data available yet!</h2>
+						<h2 th:case="null">No Pilot Schedule data available yet!</h2>
 						<div th:case="*">
 							<table class="table table-striped table-responsive-md">
 								<thead>
 									<tr>
-										<th>Booking ID</th>
-										<th>Departure</th>
-										<th>Arrival<BR/> Name</th>
-										<th>Departure Time</th>
-										<th>Arrival Time<BR/>Date</th>
-										<th>Passenger Name</th>
-										<th>Booking <br/>Date</th>
-										<th>Flight <br/>Date</th>
-										<th>Edit</th>
-										<th>Delete</th>
+										<th>Pilot ID</th>
+										<th>Pilot<BR/> Name</th>
+										<th>Flight Route</th>
+										<th>Journey Month<BR/>Date</th>
+										<th>Total Hours</th>
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:each="student : ${booking}">
-									<td th:text="${student.bookingId}"></td>
-										<td th:text="${student.source}"></td>
-										<td th:text="${student.destination}"></td>
-										<td th:text="${student.departureTime}"></td>
-										<td th:text="${student.arrivalTime}"></td>
-										<td th:text="${student.passengerName}"></td>
-										<td th:text="${student.bookingDate}"></td>
-										<td th:text="${student.flightDate}"></td>
-																				
-										<td><a th:href="@{/booking/edit/{id}(id=${student.bookingId})}"
-											class="btn btn-primary"><i class="fas fa-user-edit ml-2"></i></a></td>
-										<td><a
-											th:href="@{/booking/delete/{id}(id=${student.bookingId})}"
-											class="btn btn-primary"><i class="fas fa-user-times ml-2"></i></a></td>
-									</tr>
+									<tr th:each="student : ${pilotSchedule}">
+									<td th:text="${student.employeeid}"></td>
+										<td th:text="${student.pilotname}"></td>
+										<td th:text="${student.flightroute}"></td>
+										<td th:text="${student.journeymonth}"></td>
+										<td th:text="${student.totalhours}"></td>
+										
 								</tbody>
 							</table>
 						</div>
 
 					</div>
-				</div>
+			</div>
 			</div>
 		</div>
 	</div>

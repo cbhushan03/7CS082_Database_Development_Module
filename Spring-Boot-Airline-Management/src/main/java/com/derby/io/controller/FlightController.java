@@ -70,7 +70,7 @@ public class FlightController {
 		if(result.hasErrors()) {
 			return "add-flight";
 		}
-		repository.saveFlight(flight.getArrivalAirport(),flight.getDepartureAirport(),flight.getArrivalTime(),flight.getDepartureTime(),flight.getPilot(),flight.getPlane());
+		repository.saveFlight(flight.getArrivalAirport(),flight.getDepartureAirport(),flight.getArrivalTime(),flight.getDepartureTime(),flight.getPilot(),flight.getPlane(),flight.getHours());
 		
 		return "redirect:list";
 	}
@@ -94,10 +94,10 @@ public class FlightController {
 		}
 
 		repository.updateFlight(flight.getArrivalAirport(),flight.getDepartureAirport(),flight.getArrivalTime(),
-				flight.getDepartureTime(),flight.getPilot(),flight.getPlane(),flight.getFlightNumber());
+				flight.getDepartureTime(),flight.getPilot(),flight.getPlane(),flight.getHours(),flight.getFlightNumber());
 		
 		model.addAttribute("flights", repository.getActiveFlights());
-		return "index";
+		return "indexFlight"; 
 	}
 	 
 
@@ -107,6 +107,24 @@ public class FlightController {
 	  repository.removeFlight(id); 
 	  model.addAttribute("flights", repository.getActiveFlights());
       return "indexFlight";
+      
+	  }
+	  
+	  @GetMapping("browsePilotSchedule") 
+	  public String browsePilotSchedule(Model model) {
+	  model.addAttribute("pilotSchedule", repository.getPilotScheduleList());
+	  model.addAttribute("order", "DESC"); 
+	  
+      return "indexPilotSchedule";
+      
+	  }
+	  
+	  @GetMapping("browsePilotScheduleDesc") 
+	  public String browsePilotScheduleDesc(Model model) {
+	  model.addAttribute("pilotSchedule", repository.getPilotScheduleListDesc());
+	  model.addAttribute("order", "ASC");
+	  
+      return "indexPilotSchedule";
       
 	  }
 	 

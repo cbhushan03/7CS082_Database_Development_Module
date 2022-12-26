@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
@@ -46,5 +47,9 @@ public class Flight {
 	
 	
 	private String pilotName;
+	
+	@NotNull(message = "Please enter valid Journey hour time")
+	@Column(name="hours")
+	private int hours;
 	
 }
