@@ -31,9 +31,14 @@
                             <label for="name" class="col-form-label">Rating</label> <input type="text" th:field="*{rating}" class="form-control" id="rating" placeholder="Name"> <span th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}" class="text-danger"></span>
                         </div>
                        
-                        <div class="col-md-6">
-                            <input type="submit" class="btn btn-primary" value="Add Airline">
-                        </div>
+                       <div class="form-group col-md-10">
+								<label for="name" class="col-form-label">Rating </label> 
+								<select th:field="*{rating}">
+								  <option th:each="rtng : ${allRating}" 
+								          th:value="${rtng}" 
+								          th:text="${rtng}"></option>
+								</select>
+						</div>
 
                         <div class="form-group col-md-8"></div>
 

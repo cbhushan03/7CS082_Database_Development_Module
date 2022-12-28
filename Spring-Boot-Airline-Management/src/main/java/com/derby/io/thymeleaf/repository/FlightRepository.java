@@ -61,7 +61,7 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
 	@Query(value = "update flight set status='D' where Flight_number=:id  ",nativeQuery =true)
 	void removeFlight(@Param(value = "id") long id);
 	
-	@Query(value="select p.* from pilotschedule p",nativeQuery=true)
+	@Query(value="select p.* from pilotschedule p  order by p.totalhours asc",nativeQuery=true)
 	List<PilotSchedule> getPilotScheduleList();
 	
 	@Query(value="select p.* from pilotschedule p order by p.totalhours desc",nativeQuery=true)

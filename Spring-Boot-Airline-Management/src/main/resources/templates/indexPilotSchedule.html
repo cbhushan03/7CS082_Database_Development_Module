@@ -43,6 +43,7 @@
 				<li class="nav-item active"><a class="nav-link" href="/passengers/list">Passenger</a></li>
 				<li class="nav-item active"><a class="nav-link" href="/booking/list">Booking</a></li>
 				<li class="nav-item active"><a class="nav-link" href="/flights/browsePilotSchedule">Pilot Schedule</a></li>
+				<li class="nav-item active"><a class="nav-link" href="/booking/browsePassengerReport">Passenger Report</a></li>
 			</ul>
 		</div>
 	</nav>
@@ -58,6 +59,13 @@
 							
 						<a th:if="${order} == 'ASC'" href="/flights/browsePilotSchedule" class="btn btn-primary"><i
 							class="fas fa-user-plus ml-2">In Ascending Order</i></a>
+							
+						<a th:if="${order} != 'ASC'" href="/flights/printPilotSchedule" class="btn btn-primary"><i
+							class="fa fa-print ml-2"> Print Report ASC</i></a>
+							
+						<a th:if="${order} != 'DESC'" href="/flights/printPilotScheduleDesc" class="btn btn-primary"><i
+							class="fa fa-print ml-2 "> Print Report DESC</i></a>
+							
 					</p>
 					<div class="col-md-10">
 						<h2 th:case="null">No Pilot Schedule data available yet!</h2>

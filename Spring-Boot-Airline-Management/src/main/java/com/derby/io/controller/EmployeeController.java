@@ -2,19 +2,27 @@ package com.derby.io.controller;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.derby.io.thymeleaf.model.Department;
 import com.derby.io.thymeleaf.model.Employee;
+import com.derby.io.thymeleaf.model.Passenger;
+import com.derby.io.thymeleaf.model.Rating;
+import com.derby.io.thymeleaf.repository.DepartmentRepository;
 import com.derby.io.thymeleaf.repository.EmployeeRepository;
 
 
@@ -26,6 +34,9 @@ import com.derby.io.thymeleaf.repository.EmployeeRepository;
 public class EmployeeController {
 	
 	private final EmployeeRepository repository;
+	
+	@Autowired
+	private DepartmentRepository repositoryDepartment;
 	
 	public EmployeeController(EmployeeRepository repository) {
 		this.repository = repository;
@@ -86,5 +97,15 @@ public class EmployeeController {
 	        return "indexEmployee";
 	    }
 	    
+	    @ModelAttribute("allDepartment")
+	    List<Department> getDepartment(){
+	    	return this.repositoryDepartment.findAll();
+	    }
+	    
+	    @ModelAttribute("allRating")
+	    List<Rating> getRating(){
+	    	return Arrays.asList(Rating.ALL);
+	    }
+
 	    
 }

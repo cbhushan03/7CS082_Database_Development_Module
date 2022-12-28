@@ -1,17 +1,25 @@
 package com.derby.io.controller;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ResourceUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -33,6 +41,18 @@ import com.derby.io.thymeleaf.repository.EmployeeRepository;
 import com.derby.io.thymeleaf.repository.FlightRepository;
 import com.derby.io.thymeleaf.repository.PassangerRepository;
 
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperRunManager;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+
 
 
 @Controller
@@ -40,6 +60,9 @@ import com.derby.io.thymeleaf.repository.PassangerRepository;
 public class BookingController {
 	
 	Logger logger = LoggerFactory.getLogger(BookingController.class);
+	
+	@Value("${derby.io.report.path}")
+	private String reportPath;
 	
 	private final BookingRepository repository;
 	
@@ -153,5 +176,41 @@ public class BookingController {
 		  model.addAttribute("booking", repository.getActiveBooking());
 		  return "indexBooking"; 
 	  }
+	  
+	  @GetMapping("browsePassengerReport") 
+	  public String
+	  getPassengerReport(Model model) {
+		  
+		  
+		  model.addAttribute("passengerReport", repository.getBookedPassengerData());
+		  return "indexPassengerReport"; 
+	  }
+	  
+	  @GetMapping("printPassengerReport") 
+	  public String
+	  printPassengerReport() throws FileNotFoundException, JRException {
+		  	
+		    
+		    JasperReport jasperReport;
+		    JRDataSource reportSource;
+		    Map<String,Object> reportParameters= new HashMap<String, Object>();
+		    
+		    File filelogo = ResourceUtils.getFile("classpath:bootstrap-logo.svg");
+		    
+		    File fileJaperReport = ResourceUtils.getFile("classpath:PassengerReportCount.jrxml");
+		    
+		    reportParameters.put("paramLogFilePath",filelogo.getAbsolutePath());
+		    
+		    jasperReport = JasperCompileManager.compileReport(fileJaperReport.getAbsolutePath());
+		   
+		    reportSource = new JRBeanCollectionDataSource(repository.getBookedPassengerData(),false);
+		    
+		    JasperPrint print = JasperFillManager.fillReport(jasperReport,reportParameters,reportSource);
+		    String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+		    JasperExportManager.exportReportToPdfFile(print, reportPath+"PassengerReport_"+timestamp+".pdf");
+		    
+		    return "redirect:/booking/browsePassengerReport";  
+	  }
+	  
 	 
 }

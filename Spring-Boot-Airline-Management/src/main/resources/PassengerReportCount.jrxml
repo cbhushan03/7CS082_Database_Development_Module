@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="apartmentReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="64aec695-5142-491b-a0ef-3acc52b76603">
+	<parameter name="paramLogFilePath" class="java.lang.String"/>
+	<field name="route" class="java.lang.String"/>
+	<field name="journeydate" class="java.lang.String"/>
+	<field name="passengercount" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="56" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="105" splitType="Stretch">
+			<staticText>
+				<reportElement x="190" y="14" width="200" height="30" uuid="176b424a-5d7c-4a4f-b3df-97729d446a21"/>
+				<textElement>
+					<font fontName="Arial" size="17" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Maharaja Airline]]></text>
+			</staticText>
+			<image>
+				<reportElement x="110" y="2" width="66" height="54" uuid="1a1b4963-49fd-469b-a422-50f447cbe672"/>
+				<imageExpression><![CDATA[$P{paramLogFilePath}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="190" y="60" width="160" height="30" uuid="aaf3131a-23e1-4550-b3b4-8f02a40328da"/>
+				<textElement>
+					<font fontName="Arial" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Passenger Report]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="99" splitType="Stretch">
+			<textField pattern="yyyy-MM-dd">
+				<reportElement x="40" y="15" width="100" height="30" uuid="95a2b993-eda8-450a-aa34-195516e1d5d3"/>
+				<textElement>
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="15" width="50" height="30" uuid="97512f13-532d-40f7-b1c3-2376492db2b1"/>
+				<textElement>
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="30" y="60" width="81" height="30" uuid="83edb3be-ae77-4a67-af77-515f883d47b1"/>
+				<textElement>
+					<font fontName="Arial" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Route]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="240" y="60" width="60" height="30" uuid="a7ccdbde-1a67-457d-9f69-72f6ef6f7e41"/>
+				<textElement>
+					<font fontName="Arial" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Journey Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="390" y="60" width="110" height="30" uuid="7a0c2df5-d291-421e-ba8e-6561de456812"/>
+				<textElement>
+					<font fontName="Arial" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Passenger Count]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="63" splitType="Stretch">
+			<textField textAdjust="StretchHeight">
+				<reportElement x="30" y="20" width="130" height="30" uuid="e65defaa-2a08-467f-afee-ca459fd98d3a"/>
+				<textElement>
+					<font fontName="Arial" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{route}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="240" y="20" width="100" height="30" uuid="de37b8ea-ae56-4d26-9c21-1a4b69822ccd"/>
+				<textElement>
+					<font fontName="Arial" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{journeydate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="390" y="20" width="60" height="30" uuid="cdec7407-bb79-4429-8424-7944bcc05f41"/>
+				<textElement>
+					<font fontName="Arial" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{passengercount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="48" splitType="Stretch">
+			<staticText>
+				<reportElement x="200" y="9" width="100" height="30" uuid="24d9f1ce-48f0-43ae-b992-a84901fbcc46"/>
+				<textElement>
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Page Number:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="295" y="9" width="100" height="30" uuid="ec836b44-e76a-4ba5-bcd9-1a1d9a64d923"/>
+				<textElement>
+					<font fontName="Arial" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<staticText>
+				<reportElement x="170" y="14" width="200" height="30" uuid="4b4e8ded-9d38-4926-acc6-b510b6aa9b96"/>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[© Maharaja Airline 2021-2022]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="44" splitType="Stretch"/>
+	</summary>
+</jasperReport>

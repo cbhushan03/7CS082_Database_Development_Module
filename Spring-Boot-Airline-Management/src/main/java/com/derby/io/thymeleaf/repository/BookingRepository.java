@@ -13,6 +13,7 @@ import com.derby.io.thymeleaf.model.Booking;
 import com.derby.io.thymeleaf.model.BookingForm;
 import com.derby.io.thymeleaf.model.Employee;
 import com.derby.io.thymeleaf.model.Flight;
+import com.derby.io.thymeleaf.model.PassengerBookingReport;
 
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
@@ -53,6 +54,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 	@Modifying
 	@Query(value = "update booking set status='D' where Booking_ID=:id  ",nativeQuery =true)
 	void removeBooking(@Param(value = "id") long id);
+	
+	@Query(value = "select * from PASSENGERBOOKINGREPORT p order by p.JOURNEYDATE  ",nativeQuery = true)
+	List<PassengerBookingReport> getBookedPassengerData();
 
 
 }

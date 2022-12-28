@@ -105,21 +105,24 @@ $(function() {
 								class="text-danger"></span>
 						</div>
 
-						<div class="form-group col-md-8">
-							<label for="name" class="col-form-label">Department ID</label> <input
-								type="text" th:field="*{departmentid}" class="form-control"
-								id="departmentid" placeholder="Department ID"> <span
-								th:if="${#fields.hasErrors('departmentid')}"
-								th:errors="*{departmentid}" class="text-danger"></span>
-						</div>
+						 <div class="form-group col-md-10">
+								<label for="name" class="col-form-label">Department </label> 
+								<select th:field="*{departmentid}">
+								  <option th:each="flt : ${allDepartment}" 
+								          th:value="${flt.departmentId}" 
+								          th:text="${flt.detaprtmentName}"></option>
+								</select>
+							</div>
 
-						<div class="form-group col-md-8">
-							<label for="name" class="col-form-label">Rating</label> <input
-								type="text" th:field="*{rating}" class="form-control"
-								id="rating" placeholder="Rating"> <span
-								th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}"
-								class="text-danger"></span>
-						</div>
+						<div class="form-group col-md-10">
+								<label for="name" class="col-form-label">Rating </label> 
+								<select th:field="*{rating}">
+								  <option th:each="rtng : ${allRating}" 
+								          th:value="${rtng}" 
+								          th:text="${rtng}"></option>
+								</select>
+							</div>
+							
 						<div class="col-md-6">
 							<input type="submit" class="btn btn-primary"
 								value="Update Employee">
