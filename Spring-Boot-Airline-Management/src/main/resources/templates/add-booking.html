@@ -87,14 +87,14 @@ $(function() {
 				<div class="col-md-10">
 					<form id="addFlight" action="#" th:action="@{/booking/add}"
 						th:object="${booking}" method="post"  >
+						<div class="alert alert-danger" th:if="${errorPassenger}">
+							<p th:text="${errorPassenger}"></p>
+						</div>
+						
 						<div class="row">
-							
-						 
-							
-							
+						
 							<div class="form-group col-md-10">
-								
-							
+													
 								<table class="table">
 									<thead>
 										<tr>
@@ -104,6 +104,7 @@ $(function() {
 									</thead>
 									<tbody>
 										<tr th:each="psg,iStat : *{passengers}">
+										
 										 <td th:text="${iStat.count}">1</td>
 										 <td>
 										 	<select th:field="*{passengers[__${iStat.index}__].passengerId}">

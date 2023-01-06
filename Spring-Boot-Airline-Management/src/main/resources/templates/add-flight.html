@@ -43,6 +43,11 @@ function isNumber(evt) {
 				<div class="col-md-10">
 					<form id="addFlight" action="#" th:action="@{/flights/add}"
 						th:object="${flight}" method="post"  >
+						<div th:if="${#fields.hasAnyErrors()}">
+						    <ul>
+						        <li th:each="err : ${#fields.allErrors()}" th:text="${err}"  class="text-danger" />
+						    </ul>
+						</div>
 						<div class="row">
 							<div class="form-group col-md-8">
 								<label for="name" class="col-form-label">Arrival Airport</label> <input

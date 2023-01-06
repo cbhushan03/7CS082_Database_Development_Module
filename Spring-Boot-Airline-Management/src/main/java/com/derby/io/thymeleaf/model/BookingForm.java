@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+
+
+import com.derby.io.validation.PassengerConstraint;
 
 import lombok.Data;
 
@@ -15,6 +16,7 @@ public class BookingForm {
 	private long bookingId;
 	private long flightId;
 	
+	@PassengerConstraint
 	private List<Passenger> passengers = new ArrayList<Passenger>();
 	
 	private long passengerId;

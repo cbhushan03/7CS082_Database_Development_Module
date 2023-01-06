@@ -3,6 +3,7 @@ package com.derby.io.controller;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,9 +109,14 @@ public class BookingController {
 	
 	
 	  @PostMapping("add") 
-	  public String addDepartment(@ModelAttribute BookingForm
-	  booking, Model model) 
+	  public String addDepartment(@Valid @ModelAttribute("booking") BookingForm
+	  booking, BindingResult result, Model model) 
 	  { 
+		  if (result.hasErrors()) {
+			     model.addAttribute("errorPassenger", "Please add atleast one passenger to proceed for booking.");
+				return "add-booking";
+			}
+		  
 		  for(Passenger passenger : booking.getPassengers()) {
 			  repository.saveBooking(booking.getFlightId(),passenger.getPassengerId(),booking.getFlightDate());  
 		  }
@@ -187,8 +194,8 @@ public class BookingController {
 	  }
 	  
 	  @GetMapping("printPassengerReport") 
-	  public String
-	  printPassengerReport() throws FileNotFoundException, JRException {
+	  public void
+	  printPassengerReport(HttpServletResponse response) throws JRException, IOException {
 		  	
 		    
 		    JasperReport jasperReport;
@@ -207,9 +214,14 @@ public class BookingController {
 		    
 		    JasperPrint print = JasperFillManager.fillReport(jasperReport,reportParameters,reportSource);
 		    String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-		    JasperExportManager.exportReportToPdfFile(print, reportPath+"PassengerReport_"+timestamp+".pdf");
+		    //JasperExportManager.exportReportToPdfFile(print, reportPath+"PassengerReport_"+timestamp+".pdf");
 		    
-		    return "redirect:/booking/browsePassengerReport";  
+		    response.setContentType("application/x-download");
+		    response.addHeader("Content-disposition", "attachment; filename=PassengerReport_"+timestamp+".pdf");
+		    OutputStream out = response.getOutputStream();
+		    JasperExportManager.exportReportToPdfStream(print,out);
+		    
+	
 	  }
 	  
 	 

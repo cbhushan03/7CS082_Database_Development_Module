@@ -2,6 +2,8 @@ package com.derby.io.controller;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -9,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,7 @@ import com.derby.io.thymeleaf.model.AddFlight;
 import com.derby.io.thymeleaf.model.Airline;
 import com.derby.io.thymeleaf.model.Employee;
 import com.derby.io.thymeleaf.model.Flight;
+import com.derby.io.thymeleaf.model.PilotEligibility;
 import com.derby.io.thymeleaf.repository.AirlineRepository;
 import com.derby.io.thymeleaf.repository.EmployeeRepository;
 import com.derby.io.thymeleaf.repository.FlightRepository;
@@ -70,6 +74,14 @@ public class FlightController {
 	public String showUpdateForm(Model model) {
 		model.addAttribute("flights", repository.getActiveFlights());
 		return "indexFlight";
+	}
+	
+	@PostMapping("search")
+	public String showEligibilityData(@ModelAttribute PilotEligibility pilotEligibility,Model model) {
+		
+		model.addAttribute("listEligible", repository.getPilotEligible(pilotEligibility.getPilot()));
+		
+		return "indexPilotEligibilty";
 	}
 
 	@ModelAttribute("allAirLine")
@@ -143,25 +155,33 @@ public class FlightController {
 
 	}
 	
-	@GetMapping("printPilotScheduleDesc")
-	public String printPilotScheduleDesc(Model model) throws FileNotFoundException, JRException {
-		generateReport("DESC");
-		model.addAttribute("order", "ASC");
+	@GetMapping("viewPilotEligible")
+	public String viewPilotEligible(Model model) throws JRException, IOException {
+		
+		model.addAttribute("pilotEligibility", new PilotEligibility());
+		
+		return "indexPilotEligibilty";
 
-		return "redirect:/flights/browsePilotScheduleDesc";
+	}
+	
+	
+	@GetMapping("printPilotScheduleDesc")
+	public void printPilotScheduleDesc(Model model,HttpServletResponse response) throws JRException, IOException {
+		generateReport("DESC",response);
+		model.addAttribute("order", "ASC");
 
 	}
 	
 	@GetMapping("printPilotSchedule")
-	public String printPilotSchedule(Model model) throws FileNotFoundException, JRException {
-		generateReport("ASC");
+	public void printPilotSchedule(Model model,HttpServletResponse response) throws JRException, IOException {
+		generateReport("ASC",response);
 		model.addAttribute("order", "DESC");
 
-		return "redirect:/flights/browsePilotSchedule";
+		//return "redirect:/flights/browsePilotSchedule";
 
 	}
 	
-	public void generateReport(String order) throws JRException, FileNotFoundException {
+	public void generateReport(String order,HttpServletResponse response) throws JRException, IOException {
 		
 		   JasperReport jasperReport;
 		    JRDataSource reportSource;
@@ -183,7 +203,13 @@ public class FlightController {
 		   
 		   JasperPrint print = JasperFillManager.fillReport(jasperReport,reportParameters,reportSource);
 		    String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-		    JasperExportManager.exportReportToPdfFile(print, reportPath+"PilotScheduleReport_"+timestamp+".pdf");
+		    
+		    response.setContentType("application/x-download");
+		    response.addHeader("Content-disposition", "attachment; filename=PilotScheduleReport_"+timestamp+".pdf");
+		    OutputStream out = response.getOutputStream();
+		    JasperExportManager.exportReportToPdfStream(print,out);
+		    
+		    //JasperExportManager.exportReportToPdfFile(print, reportPath+"PilotScheduleReport_"+timestamp+".pdf");
 		
 	}
 

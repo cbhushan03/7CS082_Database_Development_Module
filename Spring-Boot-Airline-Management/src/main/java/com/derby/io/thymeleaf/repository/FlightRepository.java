@@ -11,7 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import com.derby.io.thymeleaf.model.Flight;
-
+import com.derby.io.thymeleaf.model.PilotEligibility;
+import com.derby.io.thymeleaf.model.PilotEligibilityImpl;
 import com.derby.io.thymeleaf.model.PilotSchedule;
 
 public interface FlightRepository extends JpaRepository<Flight, Long> {
@@ -66,6 +67,17 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
 	
 	@Query(value="select p.* from pilotschedule p order by p.totalhours desc",nativeQuery=true)
 	List<PilotSchedule> getPilotScheduleListDesc();
+	
+	@Query(value="select count(f.Flight_number) as CNT from 	flight f inner join employee e on 	f.Pilot_ID = e.Employee_ID inner join airline a on 	f.Plane_ID = a.NUMSRL where 	f.Pilot_ID = :pilot 	and f.Plane_ID = :plane 	and e.Rating  = a.Rating ",nativeQuery=true)
+	int ratingEligibilityCheck(@Param(value = "pilot") long pilot,
+			@Param(value = "plane") long plane);
+	
+	@Query(value="select * from (\r\n"
+			+ "select a.Airline_Name as airlinename , 'Eligible' as Status  from airline a where a.Rating  in (select Rating  from employee e where e.Employee_ID=:pilot)\r\n"
+			+ "union all\r\n"
+			+ "select a.Airline_Name as airlinename , 'Not Eligible' as Status  from airline a where a.Rating  not in (select Rating  from employee e where e.Employee_ID=:pilot)  ) as flightEligible\r\n"
+			+ "order by airlinename",nativeQuery=true)
+	List<PilotEligibilityImpl> getPilotEligible(@Param(value="pilot") int pilot);
 
 
 }

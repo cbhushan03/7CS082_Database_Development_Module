@@ -8,12 +8,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import com.derby.io.validation.RatingConstraint;
 
 import lombok.Data;
 
 @Entity
 @Table(name="Flight")
 @Data
+@RatingConstraint
 public class Flight {
 	
 	@Id
@@ -41,6 +43,7 @@ public class Flight {
 	
 	@Column(name="Plane_ID")
 	private long plane;
+	
 	
 	@Column(name="Pilot_ID")
 	private long pilot;

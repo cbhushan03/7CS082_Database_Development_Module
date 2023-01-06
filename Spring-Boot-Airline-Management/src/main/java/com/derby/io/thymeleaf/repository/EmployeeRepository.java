@@ -59,6 +59,10 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 	@Modifying
 	@Query(value = "update employee set status='D' where Employee_ID=:id  ",nativeQuery =true)
 	void removeEmployee(@Param(value = "id") long id);
+	
+	
+	@Query(value = "select a.rating from employee a  where a.Employee_ID=:id  ",nativeQuery =true)
+	String getEmployeeRating(@Param(value = "id") long id);
 
 
 }

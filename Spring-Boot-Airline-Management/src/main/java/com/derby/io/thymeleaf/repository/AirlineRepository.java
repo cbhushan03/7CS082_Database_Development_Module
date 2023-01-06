@@ -28,5 +28,9 @@ public interface AirlineRepository extends JpaRepository<Airline, Long> {
 	@Modifying
 	@Query(value = "update airline set status='D' where numsrl=:id  ",nativeQuery =true)
 	void removeAirline(@Param(value = "id") long id);
+	
+	
+	@Query(value = "select a.rating from Airline a  where a.numsrl=:id  ",nativeQuery =true)
+	String getAirlineRating(@Param(value = "id") long id);
 
 }
