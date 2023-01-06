@@ -23,13 +23,22 @@
                             <label for="name" class="col-form-label">Airline Name</label> <input type="text" th:field="*{airlineName}" class="form-control" id="airlineName" placeholder="Name"> <span th:if="${#fields.hasErrors('airlineName')}" th:errors="*{airlineName}" class="text-danger"></span>
                         </div>
                         
-                         <div class="form-group col-md-8">
-                            <label for="name" class="col-form-label">Airline Type</label> <input type="text" th:field="*{airlineType}" class="form-control" id="airlineType" placeholder="Name"> <span th:if="${#fields.hasErrors('airlineType')}" th:errors="*{airlineType}" class="text-danger"></span>
-                        </div>
+                         <!-- <div class="form-group col-md-8">
+                            <label for="name" class="col-form-label">Airline Type</label> <span th:if="${#fields.hasErrors('airlineType')}" th:errors="*{airlineType}" class="text-danger"></span>
+                        </div> -->
                         
-                         <div class="form-group col-md-8">
+                        <div class="form-group col-md-10">
+								<label for="name" class="col-form-label">Airline Type </label> 
+								<select th:field="*{airlineType}">
+								  <option th:each="airType : ${allAirlineType}" 
+								          th:value="${airType}" 
+								          th:text="${airType}"></option>
+								</select>
+						</div>
+                        
+                        <!--  <div class="form-group col-md-8">
                             <label for="name" class="col-form-label">Rating</label> <input type="text" th:field="*{rating}" class="form-control" id="rating" placeholder="Name"> <span th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}" class="text-danger"></span>
-                        </div>
+                        </div> -->
                        
                        <div class="form-group col-md-10">
 								<label for="name" class="col-form-label">Rating </label> 

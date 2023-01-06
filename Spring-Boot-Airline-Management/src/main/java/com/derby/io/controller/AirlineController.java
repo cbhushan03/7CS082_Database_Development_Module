@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.derby.io.thymeleaf.model.Airline;
+import com.derby.io.thymeleaf.model.AirlineType;
 import com.derby.io.thymeleaf.model.Rating;
 import com.derby.io.thymeleaf.repository.AirlineRepository;
 
@@ -88,5 +89,10 @@ public class AirlineController {
 	    @ModelAttribute("allRating")
 	    List<Rating> getRating(){
 	    	return Arrays.asList(Rating.ALL);
+	    }
+	    
+	    @ModelAttribute("allAirlineType")
+	    List<AirlineType> getAirlineType(){
+	    	return Arrays.asList(AirlineType.ALL);
 	    }
 }
