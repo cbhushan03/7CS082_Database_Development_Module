@@ -2,6 +2,8 @@ package com.derby.io.thymeleaf.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +16,10 @@ public interface PassangerRepository extends JpaRepository<Passenger, Long> {
 	
 	@Query(value = "select a.* from passenger a where status='A' ",nativeQuery = true)
 	List<Passenger> getActivePassenger();
+	
+	
+	@Query(value = "select * from passenger  where status='A' ",nativeQuery = true)
+	Page<Passenger> getActivePassenger(Pageable pageable);
 	
 	
 	@Transactional

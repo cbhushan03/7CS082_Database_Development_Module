@@ -1,9 +1,12 @@
 package com.derby.io.controller;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,8 +40,24 @@ public class PassengerController {
 
 	    @GetMapping("list")
 	    public String showUpdateForm(Model model) {
-	        model.addAttribute("passengers", repository.getActivePassenger());
-	        return "indexPassenger";
+	        return showPageSearch(model,1);
+	    }
+	    
+	    @GetMapping("pageSearch/{pageNumber}")
+	    public String showPageSearch(Model model,@PathVariable("pageNumber") int pageNumber) {
+	    	
+	    	Page<Passenger> page = repository.getActivePassenger(PageRequest.of(pageNumber-1,8));
+	    	int totalPage = page.getTotalPages();
+	    	long totalItem = page.getTotalElements();
+	    	List<Passenger> listPassenger= page.getContent();
+	    	
+	    	
+	    	model.addAttribute("currentPage", pageNumber);
+	    	model.addAttribute("totalPage", totalPage);
+	    	model.addAttribute("totalItem", totalItem);
+	    	
+	    	model.addAttribute("passengers", listPassenger);
+		    return "indexPassenger";
 	    }
 
 	    @PostMapping("add")

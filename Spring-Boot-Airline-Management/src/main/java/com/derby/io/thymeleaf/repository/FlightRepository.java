@@ -3,6 +3,9 @@ package com.derby.io.thymeleaf.repository;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -67,6 +70,13 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
 	
 	@Query(value="select p.* from pilotschedule p order by p.totalhours desc",nativeQuery=true)
 	List<PilotSchedule> getPilotScheduleListDesc();
+	
+	
+	@Query(value="select * from pilotschedule ",nativeQuery=true)
+	Page<PilotSchedule> getPilotScheduleListPage(Pageable pageable);
+	
+	
+	
 	
 	@Query(value="select count(f.Flight_number) as CNT from 	flight f inner join employee e on 	f.Pilot_ID = e.Employee_ID inner join airline a on 	f.Plane_ID = a.NUMSRL where 	f.Pilot_ID = :pilot 	and f.Plane_ID = :plane 	and e.Rating  = a.Rating ",nativeQuery=true)
 	int ratingEligibilityCheck(@Param(value = "pilot") long pilot,

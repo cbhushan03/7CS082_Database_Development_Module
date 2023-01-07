@@ -60,6 +60,13 @@
 					<div class="col-md-10">
 						<h2 th:case="null">No Passenger Schedule data available yet!</h2>
 						<div th:case="*">
+						<section class="panel">
+								<br />
+								<br />
+								<header class="panel-heading">
+									<h4>Passenger Booking Report</h4>
+								</header>
+								<br />
 							<table class="table table-striped table-responsive-md">
 								<thead>
 									<tr>
@@ -76,6 +83,15 @@
 										<td th:text="${student.passengercount}"></td>
 								</tbody>
 							</table>
+							<footer style="font-size: large" class="panel-footer">
+									Total Items [[${totalItem}]] : Page [[${currentPage}]] of [[${totalPage}]]
+									&nbsp; &nbsp; - &nbsp;
+									<span th:each="i: ${#numbers.sequence(1, totalPage)}">
+        								<a th:href="@{'/booking/browsePassengerReportPage/' + ${i}}">[[${i}]]</a>
+        								&nbsp; &nbsp;
+    								</span>
+								</footer>
+							</section>
 						</div>
 
 					</div>

@@ -1,10 +1,10 @@
 package com.derby.io.controller;
 
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -19,9 +19,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.ResourceUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,17 +33,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.derby.io.thymeleaf.model.AddFlight;
-import com.derby.io.thymeleaf.model.Airline;
 import com.derby.io.thymeleaf.model.Booking;
 import com.derby.io.thymeleaf.model.BookingForm;
-import com.derby.io.thymeleaf.model.Employee;
 import com.derby.io.thymeleaf.model.Flight;
 import com.derby.io.thymeleaf.model.Passenger;
-
-import com.derby.io.thymeleaf.repository.AirlineRepository;
+import com.derby.io.thymeleaf.model.PassengerBookingReport;
+import com.derby.io.thymeleaf.model.PilotEligibility;
+import com.derby.io.thymeleaf.model.SearchBookingForm;
 import com.derby.io.thymeleaf.repository.BookingRepository;
-import com.derby.io.thymeleaf.repository.EmployeeRepository;
 import com.derby.io.thymeleaf.repository.FlightRepository;
 import com.derby.io.thymeleaf.repository.PassangerRepository;
 
@@ -86,13 +87,39 @@ public class BookingController {
 		  BookingForm form = new BookingForm();
 		  //form.setPassengers(this.passangerRepository.getActivePassenger());
 		  model.addAttribute("booking",form); 
+		  
+		 
 		  return "add-booking"; 
 	  }
 	 
 	    @GetMapping("list")
 	    public String showUpdatedForm(Model model) {
-	        model.addAttribute("booking", repository.getActiveBooking());
+	    	
+	    	/*model.addAttribute("booking", repository.getActiveBooking());
+	        model.addAttribute("bookingSearchForm",new SearchBookingForm()); */
+	        
+	    	return showPageSearch(model,1);
+	    }
+	    
+	    
+	    @GetMapping("pageSearch/{pageNumber}")
+	    public String showPageSearch(Model model,@PathVariable("pageNumber") int pageNumber) {
+	    	
+	    	Page<Booking> page = findBookingPage(pageNumber);
+	    	
+	    	int totalPage = page.getTotalPages();
+	    	long totalItem = page.getTotalElements();
+	    	
+	    	List<Booking> bookings = page.getContent();
+	    	
+	    	model.addAttribute("currentPage", pageNumber);
+	    	model.addAttribute("totalPage", totalPage);
+	    	model.addAttribute("totalItem", totalItem);
+	    	
+	        model.addAttribute("booking", bookings);
+	        model.addAttribute("bookingSearchForm",new SearchBookingForm()); 
 	        return "indexBooking";
+	        
 	    }
 	    
 	    @ModelAttribute("allFlight")
@@ -185,30 +212,48 @@ public class BookingController {
 	  }
 	  
 	  @GetMapping("browsePassengerReport") 
-	  public String
-	  getPassengerReport(Model model) {
+	  public String getPassengerReport(Model model) {
+		  
+		  return getPassengerReport(model,1); 
+	  }
+	  
+	  @GetMapping("browsePassengerReportPage/{pageNumber}") 
+	  public String getPassengerReport(Model model,@PathVariable("pageNumber") int pageNumber) {
+		  
+		   Page<PassengerBookingReport> passengerBookingReport  = repository.getBookedPassengerDataPagable(PageRequest.of(pageNumber-1,8));
+		  
+		    int totalPage = passengerBookingReport.getTotalPages();
+	    	long totalItem = passengerBookingReport.getTotalElements();
+	    	
+	    	List<PassengerBookingReport> PassengerBookingReportList = passengerBookingReport.getContent();
+	    	
+	    	model.addAttribute("currentPage", pageNumber);
+	    	model.addAttribute("totalPage", totalPage);
+	    	model.addAttribute("totalItem", totalItem);
 		  
 		  
-		  model.addAttribute("passengerReport", repository.getBookedPassengerData());
+		  model.addAttribute("passengerReport", PassengerBookingReportList);
 		  return "indexPassengerReport"; 
 	  }
 	  
+	  
+	  
 	  @GetMapping("printPassengerReport") 
 	  public void
-	  printPassengerReport(HttpServletResponse response) throws JRException, IOException {
+	  printPassengerReport(HttpServletResponse response) throws JRException, IOException, URISyntaxException {
 		  	
 		    
 		    JasperReport jasperReport;
 		    JRDataSource reportSource;
 		    Map<String,Object> reportParameters= new HashMap<String, Object>();
+		   
+		    InputStream fileJaperReport = getClass().getClassLoader().getResourceAsStream("PassengerReportCount.jrxml");
 		    
-		    File filelogo = ResourceUtils.getFile("classpath:bootstrap-logo.svg");
+		
 		    
-		    File fileJaperReport = ResourceUtils.getFile("classpath:PassengerReportCount.jrxml");
+		    reportParameters.put("paramLogFilePath",null);
 		    
-		    reportParameters.put("paramLogFilePath",filelogo.getAbsolutePath());
-		    
-		    jasperReport = JasperCompileManager.compileReport(fileJaperReport.getAbsolutePath());
+		    jasperReport = JasperCompileManager.compileReport(fileJaperReport);
 		   
 		    reportSource = new JRBeanCollectionDataSource(repository.getBookedPassengerData(),false);
 		    
@@ -224,5 +269,25 @@ public class BookingController {
 	
 	  }
 	  
+	  @PostMapping("search")
+		public String browsePilotScheduleDesc(@ModelAttribute SearchBookingForm searchBookingForm,Model model) {
+		  	model.addAttribute("booking", repository.getSingleActiveBooking(searchBookingForm.getBookingId()));
+	        
+		  	model.addAttribute("currentPage", 1);
+	    	model.addAttribute("totalPage", 1);
+	    	model.addAttribute("totalItem", 1);
+		  	
+		  	model.addAttribute("bookingSearchForm",searchBookingForm); 
+	  
+	        return "indexBooking";
+
+	  }
+	  
+	  
+	  public Page<Booking> findBookingPage(int pageNumber){
+		  Pageable pageable= PageRequest.of(pageNumber-1,8);
+		  
+		  return repository.findAll(pageable);
+	  }
 	 
 }

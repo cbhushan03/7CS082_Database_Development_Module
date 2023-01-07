@@ -22,7 +22,7 @@
 			</staticText>
 			<image>
 				<reportElement x="110" y="2" width="66" height="54" uuid="1a1b4963-49fd-469b-a422-50f447cbe672"/>
-				<imageExpression><![CDATA[$P{paramLogFilePath}]]></imageExpression>
+				<imageExpression><![CDATA["bootstrap-logo.svg"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="190" y="60" width="160" height="30" uuid="aaf3131a-23e1-4550-b3b4-8f02a40328da"/>

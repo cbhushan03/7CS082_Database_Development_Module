@@ -22,7 +22,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="booking")
+@Table(name="BookingDetail")
 public class Booking {
 	
 	@Id
