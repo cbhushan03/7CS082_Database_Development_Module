@@ -1,5 +1,5 @@
 create database AirlineManagement;
-use AirlineManagement;
+use AirlineManagement;;
 
 CREATE TABLE Department(
    Department_ID int PRIMARY KEY     NOT NULL AUTO_INCREMENT,
